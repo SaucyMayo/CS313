@@ -1,0 +1,914 @@
+Solutions for Chapter 2
+1.
+Bits 1 0 0 1 1 1 1 1 0 0 0 1 0 0 0 1
+NRZ
+Clock
+Manchester
+NRZI
+2. See the figure below.
+Bits
+1 1 1 0 0 0 1 0 1 1 1 1 1 1 0 1 0 1 0 1
+NRZI
+3. The answer is in the book.
+4. One can list all 5-bit sequences and count, but here is another approach: there are
+23 sequences that start with 00, and 23 that end with 00. There are two sequences,
+00000 and 00100, that do both. Thus, the number that do either is 8+8−2 = 14,
+and finally the number that do neither is 32 − 14 = 18. Thus there would have
+been enough 5-bit codes meeting the stronger requirement; however, additional
+codes are needed for control sequences.
+5. The stuffed bits (zeros) are in bold:
+1101 0111 1100 1011 1110 1010 1111 1011 0
+6. The ∧ marks each position where a stuffed 0 bit was removed. There were no
+stuffing errors detectable by the receiver; the only such error the receiver could
+identify would be seven 1’s in a row.
+1101 0111 11∧10 1111 1∧010 1111 1∧110
+7. The answer is in the book.
+8. ..., DLE, DLE, DLE, ETX, ETX
+9.
+(a) X DLE Y, where X can be anything besides DLE and Y can be anything
+except DLE or ETX. In other words, each DLE must be followed by either
+DLE or ETX.
+(b) 0111 1111.
+910.
+(a) After 48×8=384 bits we can be off by no more than ±1/2 bit, which is
+about 1 part in 800.
+(b) One frame is 810 bytes; at STS-1 51.8 Mbps speed we are sending 51.8×106/(8×810)
+= about 8000 frames/sec, or about 480,000 frames/minute. Thus, if station
+B’s clock ran faster than station A’s by one part in 480,000, A would accu-
+mulate about one extra frame per minute.
+11. Suppose an undetectable three-bit error occurs. The three bad bits must be spread
+among one, two, or three rows. If these bits occupy two or three rows, then some
+row must have exactly one bad bit, which would be detected by the parity bit for
+that row. But if the three bits are all in one row, then that row must again have a
+parity error (as must each of the three columns containing the bad bits).
+12. If we flip the bits corresponding to the corners of a rectangle in the 2-D layout of
+the data, then all parity bits will still be correct. Furthermore, if four bits change
+and no error is detected, then the bad bits must form a rectangle: in order for the
+error to go undetected, each row and column must have no errors or exactly two
+errors.
+13. If we know only one bit is bad, then 2-D parity tells us which row and column it
+is in, and we can then flip it. If, however, two bits are bad in the same row, then
+the row parity remains correct, and all we can identify is the columns in which
+the bad bits occur.
+14. We need to show that the 1’s-complement sum of two non-0x0000 numbers
+is non-0x0000. If no unsigned overflow occurs, then the sum is just the 2’s-
+complement sum and can’t be 0000 without overflow; in the absence of overflow,
+addition is monotonic. If overflow occurs, then the result is at least 0x0000 plus
+the addition of a carry bit, i.e. ≥0x0001.
+15. Let’s define swap([A,B]) = [B,A], where A and B are one byte each. We only
+need to show [A, B] +’ [C, D] = swap([B, A] +’ [D, C]). If both (A+C) and
+(B+D) have no carry, the equation obviously holds.
+If A+C has a carry and B+D+1 does not,
+[A, B] +’ [C, D] = [(A+C) & 0xEF, B+D+1]
+swap([B, A] +’ [D, C]) = swap([B+D+1, (A+C) & 0xEF]) = [(A+C)
+& 0xEF, B+D+1]
+(The case where B+D+1 has also a carry is similar to the last case.)
+If B+D has a carry, and A+C+1 does not,
+[A, B] +’ [C, D] = [A+C+1, (B+D) & 0xEF].
+swap([B, A] +’ [D, C]) = swap([(B+D) & 0xEF, A+C+1]) = [A+C+1,
+(B+D) & 0xEF].
+10Chapter 2
+11
+If both (A+C) and (B+D) have a carry,
+[A, B] +’ [C, D] = [((A+C) & 0xEF) + 1, ((B+D) & 0xEF) + 1]
+swap([B, A] +’ [D, C]) = swap([((B+D) & 0xEF) + 1, ((A+C) &
+0xEF) + 1] = [((A+C) & 0xEF) + 1, ((B+D) & 0xEF) + 1]
+16. Consider only the 1’s complement sum of the 16-bit words. If we decrement a
+low-order byte in the data, we decrement the sum by 1, and can incrementally
+revise the old checksum by decrementing it by 1 as well. If we decrement a
+high-order byte, we must decrement the old checksum by 256.
+17. Here is a rather combinatorial approach. Let a, b, c, d be 16-bit words. Let [a, b]
+denote the 32-bit concatenation of a and b, and let carry(a, b) denote the carry
+bit (1 or 0) from the 2’s-complement sum a+b (denoted here a+2 b). It suffices to
+show that if we take the 32-bit 1’s complement sum of [a, b] and [c, d], and then
+add upper and lower 16 bits, we get the 16-bit 1’s-complement sum of a, b, c,
+and d. We note a +1 b = a +2 b +2 carry(a, b).
+The basic case is supposed to work something like this. First,
+[a, b] +2 [c, d] = [a +2 c +2 carry(b, d), b +2 d]
+Adding in the carry bit, we get
+[a, b] +1 [c, d] = [a +2 c +2 carry(b, d), b +2 d +2 carry(a, c)]
+(1)
+Now we take the 1’s complement sum of the halves,
+a +2 c +2 carry(b, d) +2 b +2 d +2 carry(a, c) + (carry(wholething))
+and regroup:
+= a +2 c +2 carry(a, c) +2 b +2 d +2 carry(b, d) + (carry(wholething))
+= (a +1 c) +2 (b +1 d) + carry(a +1 c, b +1 d)
+= (a +1 c) +1 (b +1 d)
+which by associativity and commutativity is what we want.
+There are a couple annoying special cases, however, in the preceding, where
+a sum is 0xFFFF and so adding in a carry bit triggers an additional overflow.
+Specifically, the carry(a, c) in (1) is actually carry(a, c, carry(b, d)), and sec-
+ondly adding it to b +2 d may cause the lower half to overflow, and no provision
+has been made to carry over into the upper half. However, as long as a +2 c and
+b +2 d are not equal to 0xFFFF, adding 1 won’t affect the overflow bit and so the
+above argument works. We handle the 0xFFFF cases separately.
+Suppose that b +2 d = 0xFFFF =2 0. Then a +1 b +1 c +1 d = a +1 c. On the
+other hand, [a, b] +1 [c, d] = [a +2 b, 0xFFFF] + carry(a, b). If carry(a, b) =
+0, then adding upper and lower halves together gives a +2 b = a +1 b. IfChapter 2
+12
+carry(a, b) = 1, we get [a, b] +1 [c, d] = [a +2 b +2 1, 0] and adding halves
+again leads to a +1 b.
+Now suppose a +2 c = 0xFFFF. If carry(b, d) = 1 then b +2 d 6= 0xFFFF
+and we have [a, b] +1 [c, d] = [0, b +2 d +2 1] and folding gives b +1 d. The
+carry(b, d) = 0 case is similar.
+Alternatively, we may adopt a more algebraic approach. We may treat a buffer
+consisting of n-bit blocks as a large number written in base 2n . The numeric
+value of this buffer is congruent mod (2n − 1) to the (exact) sum of the “digits”,
+that is to the exact sum of the blocks. If this latter sum has more than n bits, we
+can repeat the process. We end up with the n-bit 1’s-complement sum, which is
+thus the remainder upon dividing the original number by 2n − 1.
+Let b be the value of the original buffer. The 32-bit checksum is thus b mod 232 −
+1. If we fold the upper and lower halves, we get (b mod (232 −1)) mod (216 −1),
+and, because 232 − 1 is divisible by 216 − 1, this is b mod (216 − 1), the 16-bit
+checksum.
+18.
+(a) We take the message 11100011, append 000 to it, and divide by 1001
+according to the method shown in Section 2.4.3. The remainder is 100;
+what we transmit is the original message with this remainder appended, or
+1110 0011 100.
+(b) Inverting the first bit of the transmission gives 0110 0011 100; dividing by
+1001 (x3 + 1) gives a remainder of 10; the fact that the remainder is non-
+zero tells us a bit error occurred.
+19. The answer is in the book.
+20.
+(b)
+p
+000
+001
+010
+011
+100
+101
+110
+111
+q
+000
+001
+011
+010
+111
+110
+100
+101
+C×q
+000 000
+001 101
+010 111
+011 010
+100 011
+101 110
+110 100
+111 001
+(c) The bold entries 101 (in the dividend), 110 (in the quotient), and 101 110
+in the body of the long division here correspond to the bold row of the
+preceding table.Chapter 2
+13
+1101
+21.
+101
+101
+110
+001
+110
+111
+111
+101
+011
+011
+001
+010
+010
+011
+001
+001
+111
+110
+110
+100
+100
+100
+100
+0
+(a) M has eight elements; there are only four values for e, so there must be m1
+and m2 in M with e(m1 ) = e(m2 ). Now if m1 is transmuted into m2 by a
+two-bit error, then the error-code e cannot detect this.
+(b) For a crude estimate, let M be the set of N -bit messages with four 1’s, and
+all the rest zeros. The size of M is (N choose 4) = N !/(4!(N − 4)!).
+Any element of M can be transmuted into any other by an 8-bit error. If
+we take N large enough that the size of M is bigger than 232 , then as in
+part (a) there must for any 32-bit error code function e(m) be elements
+m1 and m2 of M with e(m1 ) = e(m2 ). To find a sufficiently large N ,
+we note N !/(4!(N − 4)!) > (N − 3)4 /24; it thus suffices to find N so
+(N − 3)4 > 24 × 232 ≈ 1011 . N ≈ 600 works. Considerably smaller
+estimates are possible.
+22. Assume a NAK is sent only when an out-of-order packet arrives. The receiver
+must now maintain a RESEND NAK timer in case the NAK, or the packed it
+NAK’ed, is lost.
+Unfortunately, if the sender sends a packet and is then idle for a while, and this
+packet is lost, the receiver has no way of noticing the loss. Either the sender
+must maintain a timeout anyway, requiring ACKs, or else some zero-data filler
+packets must be sent during idle times. Both are burdensome.
+Finally, at the end of the transmission a strict NAK-only strategy would leave the
+sender unsure about whether any packets got through. A final out-of-order filler
+packet, however, might solve this.
+23.
+(a) Propagation delay = 40 × 103 m/(2 × 108 m/s) = 200 µs.
+(b) The roundtrip time would be about 400 µs. A plausible timeout time would
+be twice this, or 0.8 ms. Smaller values (but larger than 0.4 ms!) might
+be reasonable, depending on the amount of variation in actual RTTs. See
+Section 5.2.6 of the text.
+(c) The propagation-delay calculation does not consider processing delays that
+may be introduced by the remote node; it may not be able to answer imme-
+diately.
+24. Bandwidth×(roundtrip)delay is about 125KBps × 2.5s = 312 KB, or 312 pack-
+ets. The window size should be this large; the sequence number space must cover
+twice this range, or up to 624. 10 bits are needed.Chapter 2
+14
+25. The answer is in the book.
+26. If the receiver delays sending an ACK until buffer space is available, it risks de-
+laying so long that the sender times out unnecessarily and retransmits the frame.
+27. For Fig 2.17(b) (lost frame), there are no changes from the diagram in the text.
+The next two figures correspond to the text’s Fig 2.17(c) and (d); (c) shows a
+lost ACK and (d) shows an early timeout. For (c), the receiver timeout is shown
+slightly greater than (for definiteness) twice the sender timeout.
+Sender
+Receiver
+Sender
+Fram
+Receiver
+Fram
+e
+e[N]
+ACK
+[N]
+ACK
+Timeout
+Timeout
+Fram
+Fram
+e[N]
+e
+Ignored
+Fram
+e[N+
+Timeout
+Fram
+1]
+e
+1]
+N+
+CK[
+Ignored
+A
+Timeout
+ACK
+(c)
+(d)
+Here is the version of Fig 2.17(c) (lost ACK), showing a receiver timeout of
+approximately half the sender timeout.
+duplicate frame; ignored;
+receiver still waits for
+timeout on Frame[N+1]
+Timeout for Frame[N+1]
+cancelledChapter 2
+15
+Sender
+Receiver
+Fram
+e[N]
+ACK
+Timeout; receiver retransmits
+before sender times out
+ACK
+Timeout
+cancelled
+Fram
+Yet another Timeout
+(possible, depending on
+exact timeout intervals)
+e[N+
+ACK
+28.
+1]
+(a) The duplications below continue until the end of the transmission.
+Sender
+Receiver
+Fram
+e[1]
+Fram
+e[1]
+original frame
+response to
+duplicate ACK
+original frame
+response to
+duplicate ACK
+[1]
+ACK
+[1]
+ACK
+original ACK
+response to duplicate frame
+Fram
+e[2]
+Fram
+e[2]
+[2]
+ACK
+[2]
+ACK
+original ACK
+response to duplicate frame
+Fram
+e[3]
+Fram
+e[3]
+...
+original ACK
+response to duplicate frame
+(b) To trigger the sorcerer’s apprentice phenomenon, a duplicate data frame
+must cross somewhere in the network with the previous ACK for that frame.
+If both sender and receiver adopt a resend-on-timeout strategy, with the
+same timeout interval, and an ACK is lost, then both sender and receiver
+will indeed retransmit at about the same time. Whether these retransmis-
+sions are synchronized enough that they cross in the network depends on
+other factors; it helps to have some modest latency delay or else slow hosts.
+With the right conditions, however, the sorcerer’s apprentice phenomenon
+can be reliably reproduced.
+29. The following is based on what TCP actually does: every ACK might (optionallyChapter 2
+16
+or not) contain a value the sender is to use as a maximum for SWS. If this value
+is zero, the sender stops. A later ACK would then be sent with a nonzero SWS,
+when a receive buffer becomes available. Some mechanism would need to be
+provided to ensure that this later ACK is not lost, lest the sender wait forever. It
+is best if each new ACK reduces SWS by no more than 1, so that the sender’s
+LFS never decreases.
+Assuming the protocol above, we might have something like this:
+T=0Sender sends Frame1-Frame4. In short order, ACK1...ACK4 are sent
+setting SWS to 3, 2, 1, and 0 respectively.
+The Sender now waits for SWS>0.
+T=1Receiver frees first buffer; sends ACK4/SWS=1.
+Sender slides window forward and sends Frame5.
+Receiver sends ACK5/SWS=0.
+T=2Receiver frees second buffer; sends ACK5/SWS=1.
+Sender sends Frame6; receiver sends ACK6/SWS=0.
+T=3Receiver frees third buffer; sends ACK6/SWS=1.
+Sender sends Frame7; receiver sends ACK7/SWS=0.
+T=4Receiver frees fourth buffer; sends ACK7/SWS=1.
+Sender sends Frame8; receiver sends ACK8/SWS=0.
+30. Here is one approach; variations are possible.
+If frame[N] arrives, the receiver sends ACK[N] if NFE=N; otherwise if N was in
+the receive window the receiver sends SACK[N].
+The sender keeps a bucket of values of N>LAR for which SACK[N] was re-
+ceived; note that whenever LAR slides forward this bucket will have to be purged
+of all N≤LAR.
+If the bucket contains one or two values, these could be attributed to out-of-
+order delivery. However, the sender might reasonably assume that whenever
+there was an N>LAR with frame[N] unacknowledged but with three, say, later
+SACKs in the bucket, then frame[N] was lost. (The number three here is taken
+from TCP with fast retransmit, which uses duplicate ACKs instead of SACKs.)
+Retransmission of such frames might then be in order. (TCP’s fast-retransmit
+strategy would only retransmit frame[LAR+1].)
+31. The right diagram, for part (b), shows each of frames 4-6 timing out after a
+2×RTT timeout interval; a more realistic implementation (e.g. TCP) would
+probably revert to SWS=1 after losing packets, to address both congestion con-
+trol and the lack of ACK clocking.Chapter 2
+17
+Sender
+Receiver
+Sender
+Receiver
+Fram
+Fram
+e[1]
+e[1]
+Fram
+Fram
+e[2]
+1 RTT
+2 RTT
+[1] Frame[3
+]
+ACK
+[2]
+K
+C
+A
+Fram
+e[4]
+[3]
+K
+C
+A
+Fram
+e[5]
+Fram
+e[6]
+e[2]
+F
+K[1] rame
+1 RTT
+[3]
+AC
+[2]
+ACK
+Fram
+e[4]
+[3]
+K
+C
+A
+Fram
+e[5]
+Fram
+e[6]
+Frame[4] lost
+We might resend
+ACK[3] here.
+2 RTT
+3 RTT
+3 RTT
+Timeout
+Timeout
+Fram
+e[4]
+Fram
+e[4]
+Timeout
+cumulative ACK
+Fram
+e[5]
+Timeout
+K[6]
+F
+K[4] rame
+ACAC
+Fram5]
+CK[
+e[7]
+A
+[6]
+ACK
+[6]
+Fram
+e[7]
+...
+32. The answer is in the book.
+33. In the following, ACK[N] means that all packets with sequence number less than
+N have been received.
+1. The sender sends DATA[0], DATA[1], DATA[2]. All arrive.
+2. The receiver sends ACK[3] in response, but this is slow. The receive window
+is now DATA[3]..DATA[5].
+3. The sender times out and resends DATA[0], DATA[1], DATA[2]. For conve-
+nience, assume DATA[1] and DATA[2] are lost. The receiver accepts DATA[0]
+as DATA[5], because they have the same transmitted sequence number.
+4. The sender finally receives ACK[3], and now sends DATA[3]-DATA[5]. The
+receiver, however, believes DATA[5] has already been received, when DATA[0]
+arrived, above, and throws DATA[5] away as a “duplicate”. The protocol now
+continues to proceed normally, with one bad block in the received stream.
+34. We first note that data below the sending window (that is, <LAR) is never sent
+again, and hence – because out-of-order arrival is disallowed – if DATA[N] ar-
+rives at the receiver then nothing at or before DATA[N-3] can arrive later. Simi-
+larly, for ACKs, if ACK[N] arrives then (because ACKs are cumulative) no ACK
+Frames [4]-[6]
+lostChapter 2
+18
+before ACK[N] can arrive later. As before, we let ACK[N] denote the acknowl-
+edgment of all data packets less than N.
+(a) If DATA[6] is in the receive window, then the earliest that window can be
+is DATA[4]-DATA[6]. This in turn implies ACK[4] was sent, and thus that
+DATA[1]-DATA[3] were received, and thus that DATA[0], by our initial
+remark, can no longer arrive.
+(b) If ACK[6] may be sent, then the lowest the sending window can be is
+DATA[3]..DATA[5]. This means that ACK[3] must have been received.
+Once an ACK is received, no smaller ACK can ever be received later.
+35.
+(a) The smallest working value for MaxSeqNum is 8. It suffices to show that
+if DATA[8] is in the receive window, then DATA[0] can no longer arrive at
+the receiver. We have that DATA[8] in receive window
+⇒ the earliest possible receive window is DATA[6]..DATA[8]
+⇒ ACK[6] has been received
+⇒ DATA[5] was delivered.
+But because SWS=5, all DATA[0]’s sent were sent before DATA[5]
+⇒ by the no-out-of-order arrival hypothesis, DATA[0] can no longer arrive.
+(b) We show that if MaxSeqNum=7, then the receiver can be expecting DATA[7]
+and an old DATA[0] can still arrive. Because 7 and 0 are indistinguishable
+mod MaxSeqNum, the receiver cannot tell which actually arrived. We
+follow the strategy of Exercise 27.
+1. Sender sends DATA[0]...DATA[4]. All arrive.
+2. Receiver sends ACK[5] in response, but it is slow. The receive window
+is now DATA[5]..DATA[7].
+3. Sender times out and retransmits DATA[0]. The receiver accepts it as
+DATA[7].
+(c) MaxSeqNum ≥ SWS + RWS.
+36.
+(a) Note that this is the canonical SWS = bandwidth×delay case, with RTT =
+4 sec. In the following we list the progress of one particular packet. At any
+given instant, there are four packets outstanding in various states.
+T=N
+Data[N] leaves A
+T=N+1 Data[N] arrives at R
+T=N+2 Data[N] arrives at B; ACK[N] leaves
+T=N+3 ACK[N] arrives at R
+T=N+4 ACK[N] arrives at A; DATA[N+4] leaves.
+Here is a specific timeline showing all packets in progress:Chapter 2
+19
+T=0
+T=1
+T=2
+T=3
+T=4
+T=5
+(b)
+37. T=0
+T=0
+T=1
+T=2
+T=3
+T=4
+T=5
+Data[0]...Data[3] ready; Data[0] sent
+Data[0] arrives at R; Data[1] sent
+Data[1] arrives at R; Data[0] arrives at B; ACK[0] starts back; Data[2] sent
+ACK[0] arrives at R; Data[2] arrives at R; Data[1] arrives at B;
+ACK[1] starts back; Data[3] sent
+ACK[0] arrives at A; ACK[1] arrives at R; Data[3] arrives at R;
+Data[2] arrives at B; ACK[2] starts back; Data[4] sent
+ACK[1] arrives at A; ACK[2] arrives at R; Data[4] arrives at R;
+Data[3] arrives at B; ACK[3] starts back; Data[5] sent
+Data[0]...Data[3] sent
+Data[0]...Data[3] arrive at R
+Data arrive at B; ACK[0]...ACK[3] start back
+ACKs arrive at R
+ACKs arrive at A; Data[4]...Data[7] sent
+Data arrive at R
+A sends frames 1-4. Frame[1] starts across the R–B link.
+Frames 2,3,4 are in R’s queue.
+T=1Frame[1] arrives at B; ACK[1] starts back; Frame[2] leaves R.
+Frames 3,4 are in R’s queue.
+T=2ACK[1] arrives at R and then A; A sends Frame[5] to R;
+Frame[2] arrives at B; B sends ACK[2] to R.
+R begins sending Frame[3]; frames 4,5 are in R’s queue.
+T=3ACK[2] arrives at R and then A; A sends Frame[6] to R;
+Frame[3] arrives at B; B sends ACK[3] to R;
+R begins sending Frame[4]; frames 5,6 are in R’s queue.
+T=4ACK[3] arrives at R and then A; A sends Frame[7] to R;
+Frame[4] arrives at B; B sends ACK[4] to R.
+R begins sending Frame[5]; frames 6,7 are in R’s queue.
+The steady-state queue size at R is two frames.
+38. T=0
+A sends frames 1-4. Frame[1] starts across the R–B link.
+Frame[2] is in R’s queue; frames 3 & 4 are lost.
+T=1Frame[1] arrives at B; ACK[1] starts back; Frame[2] leaves R.
+T=2ACK[1] arrives at R and then A; A sends Frame[5] to R.
+R immediately begins forwarding it to B.
+Frame[2] arrives at B; B sends ACK[2] to R.
+T=3ACK[2] arrives at R and then A; A sends Frame[6] to R.
+R immediately begins forwarding it to B.
+Frame[5] (not 3) arrives at B; B sends no ACK.
+T=4Frame[6] arrives at B; again, B sends no ACK.
+T=5A TIMES OUT, and retransmits frames 3 and 4.
+R begins forwarding Frame[3] immediately, and enqueues 4.Chapter 2
+20
+T=6Frame[3] arrives at B and ACK[3] begins its way back.
+R begins forwarding Frame[4].
+T=7Frame[4] arrives at B and ACK[6] begins its way back.
+ACK[3] reaches A and A then sends Frame[7].
+R begins forwarding Frame[7].
+39. Hosts sharing the same address will be considered to be the same host by all
+other hosts. Unless the conflicting hosts coordinate the activities of their higher
+level protocols, it is likely that higher level protocol messages with otherwise
+identical demux information from both hosts will be interleaved and result in
+communication breakdown.
+40. One-way delays:
+Coax:
+link:
+repeaters
+transceivers
+drop cable
+Total:
+1500m
+1000m
+two
+six
+(two for each repeater,
+one for each station)
+6×50m
+6.49 µs
+5.13 µs
+1.20 µs
+1.20 µs
+1.54 µs
+15.56 µs
+The roundtrip delay is thus about 31.1 µs, or 311 bits. The “official” total is
+464 bits, which when extended by 48 bits of jam signal exactly accounts for the
+512-bit minimum packet size.
+The 1982 Digital-Intel-Xerox specification presents a delay budget (page 62 of
+that document) that totals 463.8 bit-times, leaving 20 nanoseconds for unforeseen
+contingencies.
+41. A station must not only detect a remote signal, but for collision detection it must
+detect a remote signal while it itself is transmitting. This requires much higher
+remote-signal intensity.
+42.
+(a) Assuming 48 bits of jam signal was still used, the minimum packet size
+would be 4640+48 bits = 586 bytes.
+(b) This packet size is considerably larger than many higher-level packet sizes,
+resulting in considerable wasted bandwidth.
+(c) The minimum packet size could be smaller if maximum collision domain
+diameter were reduced, and if sundry other tolerances were tightened up.
+43.
+(a) A can choose kA =0 or 1; B can choose kB =0,1,2,3. A wins outright if
+(kA , kB ) is among (0,1), (0,2), (0,3), (1,2), (1,3); there is a 5/8 chance of
+this.
+(b) Now we have kB among 0...7. If kA =0, there are 7 choices for kB that
+have A win; if kA =1 then there are 6 choices. All told the probability of
+A’s winning outright is 13/16.Chapter 2
+21
+(c) P(winning race 1) = 5/8>1/2 and P(winning race 2) = 13/16>3/4; general-
+izing, we assume the odds of A winning the ith race exceed (1 − 1/2i−1 ).
+We now have that
+P(A wins every race given that it wins races 1-3)
+≥ (1 − 1/8)(1 − 1/16)(1 − 1/32)(1 − 1/64)....
+≈ 3/4.
+(d) B gives up on it, and starts over with B2 .
+44.
+(a) If A succeeds in sending a packet, B will get the next chance. If A and B
+are the only hosts contending for the channel, then even a wait of a fraction
+of a slot time would be enough to ensure alternation.
+(b) Let A and B and C be contending for a chance to transmit. We suppose the
+following: A wins the first race, and so for the second race it defers to B
+and C for two slot times. B and C collide initially; we suppose B wins the
+channel from C one slot time later (when A is still deferring). When B now
+finishes its transmission we have the third race for the channel. B defers
+for this race; let us suppose A wins. Similarly, A defers for the fourth race,
+but B wins.
+At this point, the backoff range for C is quite high; A and B however are
+each quickly successful – typically on their second attempt – and so their
+backoff ranges remain bounded by one or two slot times. As each defers to
+the other for this amount of time after a successful transmission, there is a
+strong probability that if we get to this point they will continue to alternate
+until C finally gives up.
+(c) We might increase the backoff range given a decaying average of A’s recent
+success rate.
+45. If the hosts are not perfectly synchronized the preamble of the colliding packet
+will interrupt clock recovery.
+46. Here is one possible solution; many, of course, are possible. The probability of
+four collisions appears to be quite low. Events are listed in order of occurrence.
+A attempts to transmit; discovers line is busy and waits.
+B attempts to transmit; discovers line is busy and waits.
+C attempts to transmit; discovers line is busy and waits.
+D finishes; A, B, and C all detect this, and attempt to transmit, and collide.
+A chooses kA =1, B chooses kB =1, and C chooses kC =1.
+One slot time later A, B, and C all attempt to retransmit, and again collide.
+A chooses kA =2, B chooses kB =3, and C chooses kC =1.
+One slot time later C attempts to transmit, and succeeds. While it transmits,
+A and B both attempt to retransmit but discover the line is busy and wait.
+C finishes; A and B attempt to retransmit and a third collision occurs. A
+and B back off and (since we require a fourth collision) once again happen
+to choose the same k < 8.Chapter 2
+22
+A and B collide for the fourth time; this time A chooses kA =15 and B
+chooses kB =14.
+14 slot times later, B transmits. While B is transmitting, A attempts to
+transmit but sees the line is busy, and waits for B to finish.
+47. Many variations are, of course, possible. The scenario below attempts to demon-
+strate several plausible combinations.
+D finishes transmitting.
+First slot afterwards: all three defer (P=8/27).
+Second slot afterwards: A,B attempt to transmit (and collide); C defers.
+Third slot: C transmits (A and B are presumably backing off, although no
+relationship between p-persistence and backoff strategy was described).
+C finishes.
+First slot afterwards: B attempts to transmit and A defers, so B succeeds.
+B finishes.
+First slot afterwards: A defers.
+Second slot afterwards: A defers.
+Third slot afterwards: A defers.
+Fourth slot afterwards: A defers a fourth time (P=16/81 ≈ 20%).
+Fifth slot afterwards: A transmits.
+A finishes.
+48.
+(a) The second address must be distinct from the first, the third from the first
+two, and so on; the probability that none of the address choices from
+the second to the one thousand and twenty-fourth collides with an earlier
+choice is
+(1 − 1/248 )(1 − 2/248 ) · · · (1 − 1023/248)
+≈ 1 − (1 + 2 + ... + 1023)/248 = 1 − 1, 047, 552/(2 × 248 ).
+Probability of a collision is thus 1, 047, 552/(2 × 248) ≈ 1.86 × 10−9. The
+denominator should probably be 246 rather than 248 , since two bits in an
+Ethernet address are fixed.
+(b) Probability of the above on 220 ≈ 1 million tries is 1.77 × 10−3 .
+(c) Using the method of (a) yields (230 )2 /(2 × 248 ) = 211 ; we are clearly
+beyond the valid range of the approximation. A better approximation, us-
+ing logs, is presented in Exercise 8.18. Suffice it to say that a collision is
+essentially certain.
+49.
+(a) Here is a sample run. The bold backoff-time binary digits were chosen by
+coin toss, with heads=1 and tails=0. Backoff times are then converted to
+decimal.Chapter 2
+23
+T=0: hosts A,B,C,D,E all transmit and collide. Backoff times are chosen
+by a single coin flip; we happened to get kA =1, kB =0, kC =0, kD =1, kE =1.
+At the end of this first collision, T is now 1. B and C retransmit at T=1; the
+others wait until T=2.
+T=1: hosts B and C transmit, immediately after the end of the first collision,
+and collide again. This time two coin flips are needed for each backoff; we
+happened to get kB = 00 = 0, kC = 11 = 3. At this point T is now 2; B
+will thus attempt again at T=2+0=2; C will attempt again at T=2+3=5.
+T=2: hosts A,B,D,E attempt. B chooses a three-bit backoff time as it is
+on its third collision, while the others choose two-bit times. We got kA =
+10 = 2, kB = 010 = 2, kD = 01 = 1, kE = 11 = 3. We add each k to
+T=3 to get the respective retransmission-attempt times: T=5,5,4,6.
+T=3: Nothing happens.
+T=4: Station D is the only one to attempt transmission; it successfully
+seizes the channel.
+T=5: Stations A, B, and C sense the channel before transmission, but find
+it busy. E joins them at T=6.
+(b) Perhaps the most significant difference on a real Ethernet is that stations
+close to each other will detect collisions almost immediately; only stations
+at extreme opposite points will need a full slot time to detect a collision.
+Suppose stations A and B are close, and C is far away. All transmit at the
+same time T=0. Then A and B will effectively start their backoff at T≈0; C
+will on the other hand wait for T=1. If A, B, and C choose the same backoff
+time, A and B will be nearly a full slot ahead.
+Interframe spacing is only one-fifth of a slot time and applies to all partici-
+pants equally; it is not likely to matter here.
+50. Here is a simple program:
+#define USAGE "ether N"
+// Simulates N ethernet stations all trying to transmit at once;
+// returns average # of slot times until one station succeeds.
+#include <iostream.h>
+#include <stdlib.h>
+#include <assert.h>
+#define MAX 1000 /* max # of stations */
+class station {
+public:
+void reset() { NextAttempt = CollisionCount = 0;}
+bool transmits(int T) {return NextAttempt==T;}
+void collide() { // updates station after a collision
+CollisionCount ++;
+NextAttempt += 1 + backoff( CollisionCount);Chapter 2
+24
+//the 1 above is for the current slot
+}
+private:
+int NextAttempt;
+int CollisionCount;
+static int backoff(int k) {
+//choose random number 0..2∧ k-1; ie choose k random bits
+unsigned short r = rand();
+unsigned short mask = 0xFFFF >> (16-k); // mask = 2∧ k-1
+return int (r & mask);
+}
+};
+station S[MAX];
+// run does a single simulation
+// it returns the time at which some entrant transmits
+int run (int N) {
+int time = 0;
+int i;
+for (i=0;i<N;i++) { S[i].reset(); }
+while(1) {
+int count = 0;
+// # of attempts at this time
+int j= -1; // count the # of attempts; save j as index of one of them
+for (i=0; i<N; i++) {
+if (S[i].transmits(time)) {j=i; ++count;}
+}
+if (count==1) // we are done
+return time;
+else if (count>1) { // collisions occurred
+for (i=0;i<N;i++) {
+if (S[i].transmits(time)) S[i].collide();
+}
+}
+++time;
+}
+}
+int RUNCOUNT = 10000;
+void main(int argc, char * argv[]) {
+int N, i, runsum=0;
+assert(argc == 2);
+N=atoi(argv[1]);
+assert(N<MAX);
+for (i=0;i<RUNCOUNT;i++) runsum += run(N);Chapter 2
+25
+cout << "runsum = " << runsum
+<< " RUNCOUNT= " << RUNCOUNT
+<< " average: " << ((double)runsum)/RUNCOUNT << endl;
+return;
+}
+Here is some data obtained from it:
+# stations slot times
+5
+3.9
+10
+6.6
+20
+11.2
+40
+18.8
+100
+37.7
+200
+68.6
+51. We alternate N/2 slots of wasted bandwidth with 5 slots of useful bandwidth.
+The useful fraction is: 5/(N/2 + 5) = 10/(N+10)
+52.
+(a) The program is below. It produced the following output:
+λ
+# slot times
+λ
+# slot times
+1
+6.39577
+2
+4.41884
+1.1 5.78198
+2.1 4.46704
+1.2 5.36019
+2.2 4.4593
+1.3 5.05141
+2.3 4.47471
+1.4 4.84586
+2.4 4.49953
+1.5 4.69534
+2.5 4.57311
+1.6 4.58546
+2.6 4.6123
+1.7 4.50339
+2.7 4.64568
+1.8 4.45381
+2.8 4.71836
+1.9 4.43297
+2.9 4.75893
+2
+4.41884
+3
+4.83325
+The minimum occurs at about λ=2; the theoretical value of the minimum
+is 2e − 1 = 4.43656.
+(b) If the contention period has length C, then the useful fraction is 8/(C + 8),
+which is about 64% for C = 2e − 1.
+#include <iostream.h>
+#include <stdlib.h>
+#include <math.h>
+const int RUNCOUNT = 100000;
+// X = X(lambda) is our random variable
+double X(double lambda) {
+double u;
+do {Chapter 2
+26
+u= double(rand())/RAND MAX;
+} while (u== 0);
+double val = - log(u)*lambda;
+return val;
+}
+double run(double lambda) {
+int i = 0;
+double time = 0;
+double prevtime = -1;
+double nexttime = 0;
+time = X(lambda);
+nexttime = time + X(lambda);
+// while collision: adjacent times within +/- 1 slot
+while (time - prevtime < 1 || nexttime - time < 1) {
+prevtime = time;
+time = nexttime;
+nexttime += X(lambda);
+}
+return time;
+}
+void main(int argc, char * argv[]) {
+int i;
+double sum, lambda;
+for (lambda = 1.0; lambda <= 3.01; lambda += 0.1) {
+sum = 0;
+for (i=0; i<RUNCOUNT; i++) sum += run(lambda);
+cout << lambda << "
+" << sum/RUNCOUNT << endl;
+}
+}
+53. This is the case in the hidden node problem, illustrated in Figure 2.30, in which
+A interferes with C’s communication to B, and C interferes with A’s communi-
+cation to B.
+54. Whereas in wired networks, the sender can detect collisions as they occur, this
+is not true in wireless. The hidden node problem (see previous question) is one
+reason for this, and the half-duplex nature of wireless links is another.
+55. 802.11 uses the RTS-CTS mechanism to try to address hidden terminals. A node
+that has data to send begins by sending a short RTS packet indicating that it
+would like to send data, and the receiver responds with a CTS, which is also
+likely to be received by nodes that are in reach of the receiver but hidden from
+the sender. While this doesn’t prevent collisions, the fact that RTS and CTS are
+short packets makes collisions less likely.Chapter 2
+27
+56. A base station topology would require an infrastructure of base stations in place.
+Existing base stations (and their hardline connections) may be wiped out by the
+disaster, and installing new ones may be difficult and time-consuming. With a
+mesh topology, each additional node would piggyback on existing nodes.
+57. GPS is considered too expensive and consumes too much power for the majority
+of nodes. A typical solution requires a few nodes called beacons to determine
+their own absolute locations based on GPS or manual configuration. The ma-
+jority of nodes can then derive their absolute location by combining an estimate
+of their position relative to the beacons with the absolute location information
+provided by the beacons.

@@ -1,0 +1,478 @@
+EXERCISES
+1. Show the NRZ, Manchester, and NRZI encodings for the bit pattern
+shown in Figure 2.36. Assume that the NRZI signal starts out low.
+2. Show the 4B/5B encoding and the resulting NRZI signal for the fol-
+lowing bit sequence:
+1110 0101 0000 0011.
+147148
+CHAPTER 2 Direct Links
+■ FIGURE 2.36 Diagram for Exercise 1.
+3. Show the 4B/5B encoding and the resulting NRZI signal for the fol-
+lowing bit sequence:
+1101 1110 1010 1101 1011 1110 1110 1111.
+4. In the 4B/5B encoding (Table 2.2), only two of the 5-bit codes used
+end in two 0s. How many possible 5-bit sequences are there (used
+by the existing code or not) that meet the stronger restriction of hav-
+ing at most one leading and at most one trailing 0? Could all 4-bit
+sequences be mapped to such 5-bit sequences?
+5. Assuming a framing protocol that uses bit stuffing, show the bit
+sequence transmitted over the link when the frame contains the fol-
+lowing bit sequence:
+110101111101011111101011111110.
+Mark the stuffed bits.
+6. Suppose the following sequence of bits arrives over a link:
+1101011111010111110010111110110.
+Show the resulting frame after any stuffed bits have been removed.
+Indicate any errors that might have been introduced into the frame.
+7. Suppose the following sequence of bits arrive over a link:
+011010111110101001111111011001111110.
+Show the resulting frame after any stuffed bits have been removed.
+Indicate any errors that might have been introduced into the frame.
+8. Suppose you want to send some data using a byte-oriented framing
+protocol, and the last 2 bytes of your data are DLE and ETX. WhatExercises
+sequence of bytes would be transmitted immediately prior to the
+CRC?
+9. Give an example of a byte/bit sequence that should never appear in
+a transmission for an HDLC frame.
+10. Assume that a SONET receiver resynchronizes its clock whenever a
+1 bit appears; otherwise, the receiver samples the signal in the mid-
+dle of what it believes is the bit’s timeslot.
+(a) What relative accuracy of the sender’s and receiver’s clocks is
+required in order to receive correctly 48 zero-bytes (one ATM
+AAL5 cell’s worth) in a row?
+(b) Consider a forwarding station A on a SONET STS-1 line, receiv-
+ing frames from the downstream end B and retransmitting
+them upstream. What relative accuracy of A’s and B’s clocks
+is required to keep A from accumulating more than one extra
+frame per minute?
+11. Show that the Internet checksum will never be 0xFFFF (that is, the
+final value of sum will not be 0x0000) unless every byte in the buffer
+is 0. (Internet specifications in fact require that a checksum of 0x0000
+be transmitted as 0xFFFF; the value 0x0000 is then reserved for
+an omitted checksum. Note that, in ones’ complement arithmetic,
+0x0000 and 0xFFFF are both representations of the number 0.)
+12. Prove the Internet checksum computation shown in the text is inde-
+pendent of byte order (host order or network order) except that the
+bytes in the final checksum should be swapped later to be in the
+correct order. Specifically, show that the sum of 16-bit words can be
+computed in either byte order. For example, if the ones’ complement
+sum (denoted by +’) of 16-bit words is represented as
+[A,B] +’ [C,D] +’ · · · +’ [Y,Z],
+then the following swapped sum is the same as the original sum
+above:
+[B,A] +’ [D,C] +’ · · · +’ [Z,Y].
+13. Suppose that one byte in a buffer covered by the Internet checksum
+algorithm needs to be decremented (e.g., a header hop count field).
+149150
+CHAPTER 2 Direct Links
+Give an algorithm to compute the revised checksum without rescan-
+ning the entire buffer. Your algorithm should consider whether the
+byte in question is low order or high order.
+14. Show that the Internet checksum can be computed by first taking
+the 32-bit ones’ complement sum of the buffer in 32-bit units, then
+taking the 16-bit ones’ complement sum of the upper and lower half-
+words, and finishing as before by complementing the result. (To take
+a 32-bit ones’ complement sum on 32-bit twos’ complement hard-
+ware, you need access to the “overflow” bit.)
+15. Suppose we want to transmit the message 11001001 and protect it
+from errors using the CRC polynomial x 3 + 1.
+(a) Use polynomial long division to determine the message that
+should be transmitted.
+(b) Suppose the leftmost bit of the message is inverted due to noise
+on the transmission link. What is the result of the receiver’s
+CRC calculation? How does the receiver know that an error has
+occurred?
+16. Suppose we want to transmit the message 1011 0010 0100 1011 and
+protect it from errors using the CRC8 polynomial x 8 + x 2 + x 1 + 1.
+(a) Use polynomial long division to determine the message that
+should be transmitted.
+(b) Suppose the leftmost bit of the message is inverted due to noise
+on the transmission link. What is the result of the receiver’s
+CRC calculation? How does the receiver know that an error has
+occurred?
+17. The CRC algorithm as presented in this chapter requires lots of bit
+manipulations. It is, however, possible to do polynomial long divi-
+sion taking multiple bits at a time, via a table-driven method, that
+enables efficient software implementations of CRC. We outline the
+strategy here for long division 3 bits at a time (see Table 2.4); in prac-
+tice we would divide 8 bits at a time, and the table would have 256
+entries.
+Let the divisor polynomial C = C(x) be x 3 + x 2 + 1, or 1101. To build
+the table for C, we take each 3-bit sequence, p, append three trailing
+0s, and then find the quotient q = p  000÷C, ignoring the remainder.Exercises
+Table 2.4 Table-driven CRC
+calculation.
+pq = p 000 ÷ CC ×q
+000000000 000
+001001001 101
+010011010 ____
+0110___011 ____
+100111100 011
+101110101 110
+110100110 ____
+111____111 ____
+The third column is the product C × q, the first 3 bits of which should
+equal p.
+(a) Verify for p = 110 that the quotients p  000 ÷ C and p  111 ÷ C
+are the same; that is, it does not matter what the trailing bits
+are.
+(b) Fill in the missing entries in the table.
+(c) Use the table to divide 101 001 011 001 100 by C. Hint: The
+first 3 bits of the dividend are p = 101, so from the table, the
+corresponding first 3 bits of the quotient are q = 110. Write
+the 110 above the second 3 bits of the dividend and subtract
+C × q = 101 110, again from the table, from the first 6 bits of the
+dividend. Keep going in groups of 3 bits. There should be no
+remainder.
+18. With 1 parity bit, we can detect all 1-bit errors. Show that at least one
+generalization fails, as follows:
+(a) Show that if messages m are 8 bits long, then there is no error
+detection code e = e(m) of size 2 bits that can detect all 2-bit
+errors. Hint: Consider the set M of all 8-bit messages with a
+single 1 bit; note that any message from M can be transmuted
+into any other with a 2-bit error, and show that some pair of
+messages m1 and m2 in M must have the same error code e.
+(b) Find an N (not necessarily minimal) such that no 32-bit error
+detection code applied to N -bit blocks can detect all errors
+altering up to 8 bits.
+19. Consider an ARQ protocol that uses only negative acknowledgments
+(NACKs), but no positive acknowledgments (ACKs). Describe what
+151152
+CHAPTER 2 Direct Links
+timeouts would need to be scheduled. Explain why an ACK-based
+protocol is usually preferred to a NACK-based protocol.
+20. Consider an ARQ algorithm running over a 20-km point-to-point
+fiber link.
+(a) Compute the propagation delay for this link, assuming that the
+speed of light is 2 × 108 m/s in the fiber.
+(b) Suggest a suitable timeout value for the ARQ algorithm to use.
+(c) Why might it still be possible for the ARQ algorithm to time out
+and retransmit a frame, given this timeout value?
+21. Suppose you are designing a sliding window protocol for a 1-Mbps
+point-to-point link to the moon, which has a one-way latency of
+1.25 seconds. Assuming that each frame carries 1 kB of data, what
+is the minimum number of bits you need for the sequence number?
+22. Suppose you are designing a sliding window protocol for a 1-Mbps
+point-to-point link to the stationary satellite evolving around the
+Earth at 3 × 104 km altitude. Assuming that each frame carries 1 kB of
+data, what is the minimum number of bits you need for the sequence
+number in the following cases? Assume the speed of light is 3 × 108
+meters per second.
+(a) RWS = 1.
+(b) RWS = SWS.
+23. The text suggests that the sliding window protocol can be used to
+implement flow control. We can imagine doing this by having the
+receiver delay ACKs, that is, not send the ACK until there is free buffer
+space to hold the next frame. In doing so, each ACK would simulta-
+neously acknowledge the receipt of the last frame and tell the source
+that there is now free buffer space available to hold the next frame.
+Explain why implementing flow control in this way is not a good idea.
+24. Implicit in the stop-and-wait scenarios of Figure 2.14 is the notion
+that the receiver will retransmit its ACK immediately on receipt of
+the duplicate data frame. Suppose instead that the receiver keeps its
+own timer and retransmits its ACK only after the next expected frame
+has not arrived within the timeout interval. Draw timelines illustrat-
+ing the scenarios in Figure 2.14(b)–(d); assume the receiver’s timeoutExercises
+value is twice the sender’s. Also redraw (c) assuming the receiver’s
+timeout value is half the sender’s.
+25. In stop-and-wait transmission, suppose that both sender and receiv-
+er retransmit their last frame immediately on receipt of a dupli-
+cate ACK or data frame; such a strategy is superficially reasonable
+because receipt of such a duplicate is most likely to mean the other
+side has experienced a timeout.
+(a) Draw a timeline showing what will happen if the first data
+frame is somehow duplicated but no frame is lost. How long
+will the duplications continue? This situation is known as the
+Sorcerer’s Apprentice bug.
+(b) Suppose that, like data, ACKs are retransmitted if there is no
+response within the timeout period. Suppose also that both
+sides use the same timeout interval. Identify a reasonably likely
+scenario for triggering the Sorcerer’s Apprentice bug.
+26. Give some details of how you might augment the sliding window
+protocol with flow control by having ACKs carry additional informa-
+tion that reduces the SWS as the receiver runs out of buffer space.
+Illustrate your protocol with a timeline for a transmission; assume
+the initial SWS and RWS are 4, the link speed is instantaneous, and
+the receiver can free buffers at the rate of one per second (i.e.,
+the receiver is the bottleneck). Show what happens at T = 0, T =
+1, . . . , T = 4 seconds.
+27. Describe a protocol combining the sliding window algorithm with
+selective ACKs. Your protocol should retransmit promptly, but not if a
+frame simply arrives one or two positions out of order. Your protocol
+should also make explicit what happens if several consecutive frames
+are lost.
+28. Draw a timeline diagram for the sliding window algorithm with
+SWS = RWS = 3 frames for the following two situations. Use a time-
+out interval of about 2 × RTT.
+(a) Frame 4 is lost.
+(b) Frames 4–6 are lost.
+29. Draw a timeline diagram for the sliding window algorithm with
+SWS = RWS = 4 frames in the following two situations. Assume the
+153154
+CHAPTER 2 Direct Links
+receiver sends a duplicate acknowledgment if it does not receive the
+expected frame. For example, it sends DUPACK[2] when it expects to
+see Frame[2] but receives Frame[3] instead. Also, the receiver sends
+a cumulative acknowledgment after it receives all the outstanding
+frames. For example, it sends ACK[5] when it receives the lost frame
+Frame[2] after it already received Frame[3], Frame[4], and Frame[5].
+Use a timeout interval of about 2 × RTT.
+(a) Frame 2 is lost. Retransmission takes place upon timeout (as
+usual).
+(b) Frame 2 is lost. Retransmission takes place either upon receipt
+of the first DUPACK or upon timeout. Does this scheme reduce
+the transaction time? (Note that some end-to-end protocol
+[e.g., variant of TCP] uses a similar scheme for fast retransmis-
+sion.)
+30. Suppose that we attempt to run the sliding window algorithm with
+SWS = RWS = 3 and with MaxSeqNum = 5. The N th packet DATA[N ]
+thus actually contains N mod 5 in its sequence number field.
+Give an example in which the algorithm becomes confused; that
+is, a scenario in which the receiver expects DATA[5] and accepts
+DATA[0]—which has the same transmitted sequence number—in
+its stead. No packets may arrive out of order. Note this implies
+MaxSeqNum ≥ 6 is necessary as well as sufficient.
+31. Consider the sliding window algorithm with SWS = RWS = 3, with no
+out-of-order arrivals, and with infinite-precision sequence numbers.
+(a) Show that if DATA[6] is in the receive window, then DATA[0] (or in
+general any older data) cannot arrive at the receiver (and hence
+that MaxSeqNum = 6 would have sufficed).
+(b) Show that if ACK[6] may be sent (or, more literally, that DATA[5]
+is in the sending window), then ACK[2] (or earlier) cannot be
+received.
+These amount to a proof of the formula given in Section 2.5.2, par-
+ticularized to the case SWS = 3. Note that part (b) implies that the
+scenario of the previous problem cannot be reversed to involve a fail-
+ure to distinguish ACK[0] and ACK[5].
+32. Suppose that we run the sliding window algorithm with SWS = 5 and
+RWS = 3, and no out-of-order arrivals.Exercises
+(a) Find the smallest value for MaxSeqNum. You may assume
+that it suffices to find the smallest MaxSeqNum such that if
+DATA[MaxSeqNum] is in the receive window, then DATA[0] can
+no longer arrive.
+(b) Give an example showing that MaxSeqNum − 1 is not sufficient.
+(c) State a general rule for the minimum MaxSeqNum in terms of
+SWS and RWS.
+33. Suppose A is connected to B via an intermediate router R, as shown
+in Figure 2.37. The A–R and R–B links each accept and transmit
+only one packet per second in each direction (so two packets take
+2 seconds), and the two directions transmit independently. Assume
+A sends to B using the sliding window protocol with SWS = 4.
+(a) For time = 0, 1, 2, 3, 4, 5, state what packets arrive at and leave
+each node, or label them on a timeline.
+(b) What happens if the links have a propagation delay of 1.0 sec-
+onds but accept immediately as many packets as are offered
+(i.e., latency = 1 second but bandwidth is infinite)?
+■ FIGURE 2.37 Diagram for Exercises 33–35.
+34. Suppose A is connected to B via an intermediate router R, as in the
+previous problem. The A–R link is instantaneous, but the R–B link
+transmits only one packet each second, one at a time (so two packets
+take 2 seconds). Assume A sends to B using the sliding window pro-
+tocol with SWS = 4. For time = 0, 1, 2, 3, 4, state what packets arrive at
+and are sent from A and B. How large does the queue at R grow?
+35. Consider the situation in the previous exercise, except this time,
+assume that the router has a queue size of 1; that is, it can hold one
+packet in addition to the one it is sending (in each direction). Let A’s
+timeout be 5 seconds, and let SWS again be 4. Show what happens at
+each second from T = 0 until all four packets from the first window-
+full are successfully delivered.
+36. Why is it important for protocols configured on top of the Ethernet to
+have a length field in their header, indicating how long the message
+is?
+155156
+CHAPTER 2 Direct Links
+37. What kind of problems can arise when two hosts on the same Eth-
+ernet share the same hardware address? Describe what happens and
+why that behavior is a problem.
+38. The 1982 Ethernet specification allowed between any two stations
+up to 1500 m of coaxial cable, 1000 m of other point-to-point link
+cable, and two repeaters. Each station or repeater connects to the
+coaxial cable via up to 50 m of “drop cable.” Typical delays associ-
+ated with each device are given in Table 2.5 (where c = speed of light
+in a vacuum = 3 × 108 m/s). What is the worst-case round-trip prop-
+agation delay, measured in bits, due to the sources listed? (This list
+is not complete; other sources of delay include sense time and signal
+rise time.)
+Table 2.5 Typical delays associated
+with various devices (Exercise 38).
+ItemDelay
+Coaxial cablePropagation speed 0.77c
+Link/drop cablePropagation speed 0.65c
+RepeatersApproximately 0.6 μs each
+TransceiversApproximately 0.2 μs each
+39. Coaxial cable Ethernet was limited to a maximum of 500 m between
+repeaters, which regenerate the signal to 100% of its original ampli-
+tude. Along one 500-m segment, the signal could decay to no less
+than 14% of its original value (8.5 dB). Along 1500 m, then, the decay
+might be (0.14)3 = 0.3%. Such a signal, even along 2500 m, is still
+strong enough to be read; why then are repeaters required every
+500 m?
+40. Suppose the round-trip propagation delay for Ethernet is 46.4 µs.
+This yields a minimum packet size of 512 bits (464 bits correspond-
+ing to propagation delay + 48 bits of jam signal).
+(a) What happens to the minimum packet size if the delay time is
+held constant and the signaling rate rises to 100 Mbps?
+(b) What are the drawbacks to so large a minimum packet size?Exercises
+(c) If compatibility were not an issue, how might the specifications
+be written so as to permit a smaller minimum packet size?
+41. Let A and B be two stations attempting to transmit on an Ethernet.
+Each has a steady queue of frames ready to send; A’s frames will be
+numbered A1 , A2 , and so on, and B’s similarly. Let T = 51.2 µs be the
+exponential backoff base unit.
+Suppose A and B simultaneously attempt to send frame 1, collide,
+and happen to choose backoff times of 0 × T and 1 × T , respectively,
+meaning A wins the race and transmits A1 while B waits. At the end of
+this transmission, B will attempt to retransmit B1 while A will attempt
+to transmit A2 . These first attempts will collide, but now A backs off
+for either 0 × T or 1 × T , while B backs off for time equal to one of
+0 × T,...,3 × T .
+(a) Give the probability that A wins this second backoff race imme-
+diately after this first collision; that is, A’s first choice of backoff
+time k × 51.2 is less than B’s.
+(b) Suppose A wins this second backoff race. A transmits A3 , and
+when it is finished, A and B collide again as A tries to transmit
+A4 and B tries once more to transmit B1 . Give the probability
+that A wins this third backoff race immediately after the first
+collision.
+(c) Give a reasonable lower bound for the probability that A wins
+all the remaining backoff races.
+(d) What then happens to the frame B1 ?
+This scenario is known as the Ethernet capture effect.
+42. Suppose the Ethernet transmission algorithm is modified as follows:
+after each successful transmission attempt, a host waits one or two
+slot times before attempting to transmit again and otherwise backs
+off the usual way.
+(a) Explain why the capture effect of the previous exercise is now
+much less likely.
+(b) Show how the strategy above can now lead to a pair of hosts
+capturing the Ethernet, alternating transmissions, and locking
+out a third.
+(c) Propose an alternative approach, for example, by modifying
+the exponential backoff. What aspects of a station’s history
+might be used as parameters to the modified backoff?
+157158
+CHAPTER 2 Direct Links
+43. Ethernets use Manchester encoding. Assuming that hosts sharing
+the Ethernet are not perfectly synchronized, why does this allow col-
+lisions to be detected soon after they occur, without waiting for the
+CRC at the end of the packet?
+44. Suppose A, B, and C all make their first carrier sense, as part of an
+attempt to transmit, while a fourth station D is transmitting. Draw a
+timeline showing one possible sequence of transmissions, attempts,
+collisions, and exponential backoff choices. Your timeline should
+also meet the following criteria: (i) initial transmission attempts
+should be in the order A, B, C, but successful transmissions should
+be in the order C, B, A, and (ii) there should be at least four collisions.
+45. Repeat the previous exercise, now with the assumption that Ether-
+net is p-persistent with p = 0.33 (that is, a waiting station transmits
+immediately with probability p when the line goes idle and other-
+wise defers one 51.2-µs slot time and repeats the process). Your time-
+line should meet criterion (i) of the previous problem, but in lieu of
+criterion (ii), you should show at least one collision and at least one
+run of four deferrals on an idle line. Again, note that many solutions
+are possible.
+46. Suppose Ethernet physical addresses are chosen at random (using
+true random bits).
+(a) What is the probability that on a 1024-host network, two
+addresses will be the same?
+(b) What is the probability that the above event will occur on some
+one or more of 220 networks?
+(c) What is the probability that of the 230 hosts in all the networks
+of (b), some pair has the same address?
+Hint: The calculation for (a) and (c) is a variant of that used in solving
+the so-called birthday problem: given N people, what is the proba-
+bility that two of their birthdays (addresses) will be the same? The
+1
+of having a different birthday
+second person has probability 1 − 365
+2
+of having a different
+from the first, the third has probability 1 − 365
+birthday from the first two, and so on. The probability all birthdays
+are different is thus
+
+1−
+ 
+
+
+
+2
+N −1
+1
+× 1−
+× ··· × 1 −
+,
+365
+365
+365Exercises
+which for smallish N is about
+1−
+1 + 2 + · · · + (N − 1)
+.
+365
+47. Suppose five stations are waiting for another packet to finish on an
+Ethernet. All transmit at once when the packet is finished and collide.
+(a) Simulate this situation up until the point when one of the five
+waiting stations succeeds. Use coin flips or some other genuine
+random source to determine backoff times. Make the following
+simplifications: ignore interframe spacing, ignore variability in
+collision times (so that retransmission is always after an exact
+integral multiple of the 51.2-µs slot time), and assume that
+each collision uses up exactly one slot time.
+(b) Discuss the effect of the listed simplifications in your sim-
+ulation versus the behavior you might encounter on a real
+Ethernet.
+48. Write a program to implement the simulation discussed above, this
+time with N stations waiting to transmit. Again, model time as an
+integer, T, in units of slot times, and again, treat collisions as tak-
+ing one slot time (so a collision at time T followed by a backoff of
+k = 0 would result in a retransmission attempt at time T + 1). Find the
+average delay before one station transmits successfully, for N = 20,
+N = 40, and N = 100. Do your data support the notion that the delay
+is linear in N ? Hint: For each station, keep track of that station’s Next-
+TimeToSend and CollisionCount. You are done when you reach a time T
+for which there is only one station with NextTimeToSend == T. If there
+is no such station, increment T. If there are two or more, schedule the
+retransmissions and try again.
+49. Suppose that N Ethernet stations, all trying to send at the same time,
+require N/2 slot times to sort out who transmits next. Assuming the
+average packet size is 5 slot times, express the available bandwidth
+as a function of N .
+50. Consider the following Ethernet model. Transmission attempts are
+made at random times with an average spacing of λ slot times; specif-
+ically, the interval between consecutive attempts is an exponential
+random variable x = −λ log u, where u is chosen randomly in the
+interval 0 ≤ u ≤ 1. An attempt at time t results in a collision if there is
+159160
+CHAPTER 2 Direct Links
+another attempt in the range from t − 1 to t + 1, where t is measured
+in units of the 51.2-µs slot time; otherwise the attempt succeeds.
+(a) Write a program to simulate, for a given value of λ, the average
+number of slot times needed before a successful transmission,
+called the contention interval. Find the minimum value of the
+contention interval. Note that you will have to find one attempt
+past the one that succeeds in order to determine if there was a
+collision. Ignore retransmissions, which probably do not fit the
+random model above.
+(b) The Ethernet alternates between contention intervals and suc-
+cessful transmissions. Suppose the average successful trans-
+mission lasts 8 slot times (512 bytes). Using your mini-
+mum length of the contention interval from above, what
+fraction of the theoretical 10-Mbps bandwidth is available for
+transmissions?
+51. How can a wireless node interfere with the communications of
+another node when the two nodes are separated by a distance greater
+that the transmission range of either node?
+52. Why might a mesh topology be superior to a base station topology
+for communications in a natural disaster?
+53. Suppose a single computer is capable of generating output data
+at a rate higher than Bluetooth’s bandwidth. If the computer were
+equipped with two or more Bluetooth masters, each with its own
+slaves, would that work?
+54. When a cell phone moves from an area served exclusively by a single
+base station to an area where the cells of several base stations over-
+lap, how is it determined which base station will control the phone?
+55. Why is it important that nodes in sensor nets consume very little
+power?
+56. Why is it not practical for each node in a sensor net to learn its loca-
+tion by using GPS? Describe a practical alternative.

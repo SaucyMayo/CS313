@@ -1,0 +1,306 @@
+EXERCISES
+1. Use anonymous FTP to connect to ftp.rfc-editor.org (directory in-
+notes), and retrieve the RFC index. Also retrieve the protocol speci-
+fications for TCP, IP, and UDP.
+2. Use a Web search tool to locate useful, general, and noncommercial
+information about the following topics: MBone, ATM, MPEG, IPv6,
+and Ethernet.
+3. The Unix utility whois can be used to find the domain name corre-
+sponding to an organization or vice versa. Read the man page docu-
+mentation for whois and experiment with it. Try whois princeton.edu
+and whois princeton for starters. As an alternative, explore the whois
+interface at http://www.internic.net/whois.html.
+4. Calculate the total time required to transfer a 1000-kB file in the fol-
+lowing cases, assuming an RTT of 100 ms, a packet size of 1 kB data,
+and an initial 2 × RTT of “handshaking” before data are sent.
+(a) The bandwidth is 1.5 Mbps, and data packets can be sent con-
+tinuously.
+(b) The bandwidth is 1.5 Mbps, but after we finish sending each
+data packet, we must wait one RTT before sending the next.
+(c) The bandwidth is “infinite,” meaning that we take transmit
+time to be zero, and up to 20 packets can be sent per RTT.
+(d) The bandwidth is infinite, and during the first RTT, we can
+send one packet (21−1 ), during the second RTT we can send
+two packets (22−1 ), during the third we can send four (23−1 ),
+and so on. (A justification for such an exponential increase will
+be given in Chapter 6.)
+5. Calculate the total time required to transfer a 1.5 MB file in the fol-
+lowing cases, assuming an RTT of 80 ms, a packet size of 1 kB data,
+and an initial 2 × RTT of “handshaking” before data are sent.
+(a) The bandwidth is 10 Mbps, and data packets can be sent con-
+tinuously.
+(b) The bandwidth is 10 Mbps, but after we finish sending each
+data packet, we must wait one RTT before sending the next.
+5758
+CHAPTER 1 Foundation
+(c) The link allows infinitely fast transmit but limits bandwidth
+such that only 20 packets can be sent per RTT.
+(d) Zero transmit time as in (c), but during the first RTT, we can
+send one packet, during the second RTT we can send two
+packets, during the third we can send four = 23−1 , etc. (A jus-
+tification for such an exponential increase will be given in
+Chapter 6.)
+6. Consider a point-to-point link 2 km in length. At what bandwidth
+would propagation delay (at a speed of 2 × 108 m/sec) equal transmit
+delay for 100-byte packets? What about 512-byte packets?
+7. Consider a point-to-point link 50 km in length. At what bandwidth
+would propagation delay (at a speed of 2 × 108 m/sec) equal transmit
+delay for 100-byte packets? What about 512-byte packets?
+8. What properties of postal addresses would be likely to be shared by
+a network addressing scheme? What differences might you expect to
+find? What properties of telephone numbering might be shared by a
+network addressing scheme?
+9. One property of addresses is that they are unique; if two nodes had
+the same address, it would be impossible to distinguish between
+them. What other properties might be useful for network addresses
+to have? Can you think of any situations in which network (or postal
+or telephone) addresses might not be unique?
+10. Give an example of a situation in which multicast addresses might
+be beneficial.
+11. What differences in traffic patterns account for the fact that STDM is
+a cost-effective form of multiplexing for a voice telephone network
+and FDM is a cost-effective form of multiplexing for television and
+radio networks, yet we reject both as not being cost-effective for a
+general-purpose computer network?
+12. How “wide” is a bit on a 1-Gbps link? How long is a bit in copper wire,
+where the speed of propagation is 2.3 × 108 m/s?Exercises
+13. How long does it take to transmit x kB over a y-Mbps link? Give your
+answer as a ratio of x and y.
+14. Suppose a 100-Mbps point-to-point link is being set up between
+Earth and a new lunar colony. The distance from the moon to the
+Earth is approximately 385,000 km, and data travel over the link at
+the speed of light—3 × 108 m/s.
+(a) Calculate the minimum RTT for the link.
+(b) Using the RTT as the delay, calculate the delay × bandwidth
+product for the link.
+(c) What is the significance of the delay × bandwidth product
+computed in (b)?
+(d) A camera on the lunar base takes pictures of the Earth and
+saves them in digital format to disk. Suppose Mission Control
+on Earth wishes to download the most current image, which is
+25 MB. What is the minimum amount of time that will elapse
+between the instant when the request for the data goes out
+and the transfer is finished?
+15. Suppose a 128-kbps point-to-point link is set up between Earth and a
+rover on Mars. The distance from Earth to Mars (when they are clos-
+est together) is approximately 55 Gm, and data travel over the link at
+the speed of light—3 × 108 m/sec.
+(a) Calculate the minimum RTT for the link.
+(b) Calculate the delay × bandwidth product for the link.
+(c) A camera on the rover takes pictures of its surroundings and
+sends these to Earth. How quickly after a picture is taken can
+it reach Mission Control on Earth? Assume that each image is
+5 Mbit in size.
+16. For each of the following operations on a remote file server, discuss
+whether they are more likely to be delay-sensitive or bandwidth-
+sensitive.
+(a) Open a file.
+(b) Read the contents of a file.
+(c) List the contents of a directory.
+(d) Display the attributes of a file.
+17. Calculate the latency (from first bit sent to last bit received) for the
+following:
+5960
+CHAPTER 1 Foundation
+(a) 10-Mbps Ethernet with a single store-and-forward switch in
+the path and a packet size of 5000 bits. Assume that each link
+introduces a propagation delay of 10 µs and that the switch
+begins retransmitting immediately after it has finished receiv-
+ing the packet.
+(b) Same as (a) but with three switches.
+(c) Same as (a) but assume the switch implements “cut-through”
+switching: it is able to begin retransmitting the packet after the
+first 200 bits have been received.
+18. Calculate the latency (from first bit sent to last bit received) for:
+(a) 1-Gbps Ethernet with a single store-and-forward switch in the
+path and a packet size of 5000 bits. Assume that each link
+introduces a propagation delay of 10 µs and that the switch
+begins retransmitting immediately after it has finished receiv-
+ing the packet.
+(b) Same as (a) but with three switches.
+(c) Same as (b) but assume the switch implements “cut-through”
+switching: it is able to begin retransmitting the packet after the
+first 128 bits have been received.
+19. Calculate the effective bandwidth for the following cases. For (a) and
+(b), assume there is a steady supply of data to send; for (c), simply
+calculate the average over 12 hours.
+(a) 10-Mbps Ethernet through three store-and-forward switches
+as in Exercise 17(b). Switches can send on one link while
+receiving on the other.
+(b) Same as (a) but with the sender having to wait for a 50-
+byte acknowledgment packet after sending each 5000-bit data
+packet.
+(c) Overnight (12-hour) shipment of 100 compact disks (650 MB
+each).
+20. Calculate the bandwidth × delay product for the following links. Use
+one-way delay, measured from first bit sent to first bit received.
+(a) 10-Mbps Ethernet with a delay of 10 µs.
+(b) 10-Mbps Ethernet with a single store-and-forward switch like
+that of Exercise 17(a), packet size 5000 bits, and 10 µs per link
+propagation delay.Exercises
+■ FIGURE 1.21 Diagram for Exercise 21.
+(c) 1.5-Mbps T1 link, with a transcontinental one-way delay of
+50 ms.
+(d) 1.5-Mbps T1 link through a satellite in geosynchronous orbit,
+35,900 km high. The only delay is speed-of-light propagation
+delay.
+21. Hosts A and B are each connected to a switch S via 10-Mbps links
+as in Figure 1.21. The propagation delay on each link is 20 µs. S
+is a store-and-forward device; it begins retransmitting a received
+packet 35 µs after it has finished receiving it. Calculate the total time
+required to transmit 10,000 bits from A to B:
+(a) as a single packet.
+(b) as two 5000-bit packets sent one right after the other.
+22. Suppose a host has a 1-MB file that is to be sent to another host. The
+file takes 1 second of CPU time to compress 50%, or 2 seconds to
+compress 60%.
+(a) Calculate the bandwidth at which each compression option
+takes the same total compression + transmission time.
+(b) Explain why latency does not affect your answer.
+23. Suppose that a certain communications protocol involves a per-
+packet overhead of 100 bytes for headers and framing. We send 1 mil-
+lion bytes of data using this protocol; however, one byte is corrupted,
+and the entire packet containing it is thus lost. Give the total number
+of overhead + loss bytes for packet data sizes of 1000, 5000, 10,000,
+and 20,000 bytes. Which size is optimal?
+24. Assume you wish to transfer an n-B file along a path composed of the
+source, the destination, seven point-to-point links, and five switches.
+Suppose each link has a propagation delay of 2 ms, a bandwidth
+of 4 Mbps, and that the switches support both circuit and packet
+switching. Thus you can either break the file up into 1-kB packets
+or set up a circuit through the switches and send the file as one con-
+tiguous bitstream. Suppose packets have 24 B of packet header infor-
+6162
+CHAPTER 1 Foundation
+mation and 1000 B of payload, that store-and-forward packet pro-
+cessing at each switch incurs a 1-ms delay after the packet had been
+completely received, that packets may be sent continuously with-
+out waiting for acknowledgments, and that circuit setup requires a
+1-kB message to make one round-trip on the path incurring a 1-ms
+delay at each switch after the message has been completely received.
+Assume switches introduce no delay to data traversing a circuit. You
+may also assume that file size is a multiple of 1000 B.
+(a) For what file size n B is the total number of bytes sent across
+the network less for circuits than for packets?
+(b) For what file size n B is the total latency incurred before the
+entire file arrives at the destination less for circuits than for
+packets?
+(c) How sensitive are these results to the number of switches
+along the path? To the bandwidth of the links? To the ratio of
+packet size to packet header size?
+(d) How accurate do you think this model of the relative merits
+of circuits and packets is? Does it ignore important consider-
+ations that discredit one or the other approach? If so, what are
+they?
+25. Consider a network with a ring topology, link bandwidths of
+100 Mbps, and propagation speed 2 × 108 m/s. What would the cir-
+cumference of the loop be to exactly contain one 250-byte packet,
+assuming nodes do not introduce delay? What would the circumfer-
+ence be if there was a node every 100 m and each node introduced
+10 bits of delay?
+26. Compare the channel requirements for voice traffic with the require-
+ments for the real-time transmission of music in terms of bandwidth,
+delay, and jitter. What would have to improve? By approximately how
+much? Could any channel requirements be relaxed?
+27. For the following, assume that no data compression is done; this
+would in practice almost never be the case. For (a)–(c), calculate the
+bandwidth necessary for transmitting in real-time:
+(a) video at a resolution of 640 × 480, 3 bytes/pixel, 30 frames/sec-
+ond.
+(b) 160 × 120 video, 1 byte/pixel, 5 frames/second.Exercises
+(c) CD-ROM music, assuming one CD holds 75 minutes’ worth
+and takes 650 MB.
+(d) Assume a fax transmits an 8 × 10-inch black-and-white image
+at a resolution of 72 pixels per inch. How long would this take
+over a 14.4-kbps modem?
+28. For the following, as in the previous problem, assume that no data
+compression is done. Calculate the bandwidth necessary for trans-
+mitting in real-time:
+(a) HDTV high-definition video at a resolution of 1920 × 1080, 24
+bits/pixel, 30 frames/sec.
+(b) POTS (plain old telephone service) voice audio of 8 bit sam-
+ples at 8 KHz.
+(c) GSM mobile voice audio of 260-bit samples at 50 Hz.
+(d) HDCD high-definition audio of 24-bit samples at 88.2 kHz.
+29. Discuss the relative performance needs of the following applications
+in terms of average bandwidth, peak bandwidth, latency, jitter, and
+loss tolerance:
+(a) file server.
+(b) print server.
+(c) digital library.
+(d) routine monitoring of remote weather instruments.
+(e) voice.
+(f ) video monitoring of a waiting room.
+(g) television broadcasting.
+30. Suppose a shared medium M offers to hosts A1 , A2 , . . . , AN in round-
+robin fashion an opportunity to transmit one packet; hosts that have
+nothing to send immediately relinquish M. How does this differ from
+STDM? How does network utilization of this scheme compare with
+STDM?
+31. Consider a simple protocol for transferring files over a link. After
+some initial negotiation, A sends data packets of size 1 kB to B; B
+then replies with an acknowledgment. A always waits for each ACK
+before sending the next data packet; this is known as stop-and-wait.
+Packets that are overdue are presumed lost and are retransmitted.
+6364
+CHAPTER 1 Foundation
+(a) In the absence of any packet losses or duplications, explain
+why it is not necessary to include any “sequence number” data
+in the packet headers.
+(b) Suppose that the link can lose occasional packets but that
+packets that do always arrive in the order sent. Is a 2-bit
+sequence number (that is, N mod 4) enough for A and B to
+detect and resend any lost packets? Is a 1-bit sequence num-
+ber enough?
+(c) Now suppose that the link can deliver out of order and that
+sometimes, a packet can be delivered as much as 1 minute
+after subsequent packets. How does this change the sequence
+number requirements?
+32. Suppose hosts A and B are connected by a link. Host A continuously
+transmits the current time from a high-precision clock, at a regu-
+lar rate, fast enough to consume all the available bandwidth. Host B
+reads these time values and writes them, each paired with its own
+time from a local clock synchronized with A’s. Give qualitative exam-
+ples of B’s output assuming the link has:
+(a) high bandwidth, high latency, low jitter.
+(b) low bandwidth, high latency, high jitter.
+(c) high bandwidth, low latency, low jitter, occasional lost data.
+For example, a link with zero jitter, a bandwidth high enough to write
+on every other clock tick, and a latency of 1 tick might yield some-
+thing like (0000, 0001), (0002, 0003), (0004, 0005).
+33. Obtain and build the simplex-talk sample socket program shown in
+the text. Start one server and one client, in separate windows. While
+the first client is running, start 10 other clients that connect to the
+same server; these other clients should most likely be started in the
+background with their input redirected from a file. What happens to
+these 10 clients? Do their connect()s fail, time out, or succeed? Do any
+other calls block? Now let the first client exit. What happens? Try this
+with the server value MAX_PENDING set to 1 as well.
+34. Modify the simplex-talk socket program so that each time the client
+sends a line to the server, the server sends the line back to the client.
+The client (and server) will now have to make alternating calls to
+recv() and send().Exercises
+35. Modify the simplex-talk socket program so that it uses UDP as
+the transport protocol rather than TCP. You will have to change
+SOCK_STREAM to SOCK_DGRAM in both client and server. Then, in
+the server, remove the calls to listen() and accept(), and replace the
+two nested loops at the end with a single loop that calls recv() with
+socket s. Finally, see what happens when two such UDP clients
+simultaneously connect to the same UDP server, and compare this
+to the TCP behavior.
+36. Investigate the different options and parameters one can set for a
+TCP connection. (Do “man tcp” on Unix.) Experiment with various
+parameter settings to see how they affect TCP performance.
+37. The Unix utility ping can be used to find the RTT to various Inter-
+net hosts. Read the man page for ping, and use it to find the RTT to
+www.cs.princeton.edu in New Jersey and www.cisco.com in California.
+Measure the RTT values at different times of day, and compare the
+results. What do you think accounts for the differences?
+38. The Unix utility traceroute, or its Windows equivalent tracert, can be
+used to find the sequence of routers through which a message is
+routed. Use this to find the path from your site to some others. How
+well does the number of hops correlate with the RTT times from ping?
+How well does the number of hops correlate with geographical dis-
+tance?
+39. Use traceroute, above, to map out some of the routers within your
+organization (or to verify none are used).
